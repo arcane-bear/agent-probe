@@ -4,7 +4,9 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/arcane-bear/agent-probe)](https://goreportcard.com/report/github.com/arcane-bear/agent-probe)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**Health check sidecar for AI agents.** Verifies LLM connectivity, token budgets, tool availability, and response quality — beyond simple HTTP 200.
+**A lightweight Go tool for probing and monitoring AI agent health and performance.** Verifies LLM connectivity, token budgets, tool availability, and response quality — beyond simple HTTP 200.
+
+Built by [RapidClaw](https://rapidclaw.dev) — self-hosted AI agent deployment platform.
 
 ## The Problem
 
@@ -26,7 +28,14 @@ Traditional health checks don't catch any of this. **agent-probe** does.
 | **Tool Availability** | Verifies external tool endpoints your agent depends on |
 | **Response Quality** | Sends a test prompt, validates the response is coherent |
 
-## Quick Start
+## Installation
+
+### From Source
+
+```bash
+go install github.com/arcane-bear/agent-probe/cmd/agent-probe@latest
+agent-probe --config agent-probe.yaml
+```
 
 ### Docker
 
@@ -80,11 +89,17 @@ readinessProbe:
   periodSeconds: 15
 ```
 
-### From Source
+## Usage
 
 ```bash
-go install github.com/arcane-bear/agent-probe/cmd/agent-probe@latest
+# Run with a config file
 agent-probe --config agent-probe.yaml
+
+# Check the health endpoint
+curl http://localhost:8089/healthz
+
+# Check readiness
+curl http://localhost:8089/readyz
 ```
 
 ## Configuration
@@ -154,6 +169,15 @@ checks:
 }
 ```
 
+## Documentation
+
+For deployment guides and integration with other RapidClaw tools, visit the [RapidClaw docs](https://rapidclaw.dev).
+
+## Related Projects
+
+- [RapidClaw](https://rapidclaw.dev) — self-hosted AI agent deployment platform
+- [arcane-bear](https://github.com/arcane-bear) — more open-source tools for AI infrastructure
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
@@ -164,4 +188,4 @@ MIT — see [LICENSE](LICENSE).
 
 ---
 
-Built by [Rapid Claw](https://rapidclaw.dev) | [arcane-bear](https://github.com/arcane-bear)
+Built by [RapidClaw](https://rapidclaw.dev) | [arcane-bear](https://github.com/arcane-bear)
