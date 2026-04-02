@@ -1,0 +1,50 @@
+# agent-probe configuration
+# Health check sidecar for AI agents
+
+server:
+  port: 8089
+
+checks:
+  # LLM Connectivity Check
+  # Pings the LLM endpoint and verifies the API key is valid.
+  llm:
+    enabled: true
+    endpoint: "https://api.openai.com/v1/models"
+    api_key_env: "OPENAI_API_KEY"
+    timeout: 10s
+
+  # Token Budget Check
+  # Queries remaining tokens/credits and alerts when running low.
+  token_budget:
+    enabled: true
+    endpoint: "https://api.openai.com/v1/usage"
+    api_key_env: "OPENAI_API_KEY"
+    warn_threshold: 20      # percentage remaining
+    critical_threshold: 5   # percentage remaining
+    timeout: 10s
+
+  # Tool Availability Check
+  # Verifies that external tool endpoints your agent depends on are reachable.
+  tools:
+    enabled: true
+    endpoints:
+      - name: "vector-db"
+        url: "http://qdrant:6333/healthz"
+        timeout: 5s
+      - name: "search-api"
+        url: "http://searxng:8080/healthz"
+        timeout: 5s
+      - name: "code-interpreter"
+        url: "http://sandbox:8000/health"
+        timeout: 5s
+
+  # Response Quality Check
+  # Sends a test prompt to the LLM and verifies the response is coherent.
+  # Disabled by default as it consumes tokens.
+  response_quality:
+    enabled: false
+    endpoint: "https://api.openai.com/v1/chat/completions"
+    api_key_env: "OPENAI_API_KEY"
+    test_prompt: "What is 2+2? Reply with just the number."
+    expected_substring: "4"
+    timeout: 15s
